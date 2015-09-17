@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+require 'docopt'
+require 'lanyard/lanyard_cmd'
+
+command_name = File.basename(__FILE__)
+
+doc = <<DOCOPT
+#{command_name} - helper script to work with OSX keychain
+
+Usage:
+  #{command_name} use-keychain [(-t=Time | --lock-timeout=Time)] (<keychain> <password>)...
+  #{command_name} unuse-keychain <keychain>...
+  #{command_name} (-h | --help)
+
+Options:
+-t=Time, --lock-timeout=Time    lock timeout [default: 7200].
+-h, --help                      show this help message and exit
+
+Commands:
+use-keychain    Add the provided keychains to the lookup list and unlock them with password
+unuse-keychain  Lock keychains and remove them from lookup list
+
+DOCOPT
+
+options = nil
+begin
+  options = Docopt::docopt(doc)
+rescue Docopt::Exit => e
+  puts e.message
+  exit
+end
+
+Lanyard.execute options
