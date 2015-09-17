@@ -1,5 +1,6 @@
 # Lanyard
 
+[![Gem Version](https://badge.fury.io/rb/lanyard.svg)](http://badge.fury.io/rb/lanyard)
 [![Build Status](https://travis-ci.org/wooga/lanyard.svg?branch=master)](https://travis-ci.org/wooga/lanyard)
 [![Code Climate](https://codeclimate.com/github/wooga/lanyard/badges/gpa.svg)](https://codeclimate.com/github/wooga/lanyard)
 [![Test Coverage](https://codeclimate.com/github/wooga/lanyard/badges/coverage.svg)](https://codeclimate.com/github/wooga/lanyard/coverage)
