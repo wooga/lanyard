@@ -1,5 +1,9 @@
 # Lanyard
 
+[![Build Status](https://travis-ci.org/wooga/lanyard.svg?branch=master)](https://travis-ci.org/wooga/lanyard)
+[![Code Climate](https://codeclimate.com/github/wooga/lanyard/badges/gpa.svg)](https://codeclimate.com/github/wooga/lanyard)
+[![Test Coverage](https://codeclimate.com/github/wooga/lanyard/badges/coverage.svg)](https://codeclimate.com/github/wooga/lanyard/coverage)
+
 Lanyar is a little gem that helps to work with OSX keychains
 It includes a simple wrapper for `security` and is able to add/remove custom keychains to the keychain lookip list with one command.
 
