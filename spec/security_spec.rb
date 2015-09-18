@@ -143,13 +143,13 @@ describe Lanyard::Security do
     let(:expected_options){
       [
         "-a", option_values[:account],
-        "-c", option_values[:creator],
-        "-C", option_values[:type],
-        "-D", option_values[:kind],
-        "-G", option_values[:value],
         "-j", option_values[:comment],
+        "-c", option_values[:creator],
+        "-D", option_values[:kind],
         "-l", option_values[:label],
-        "-s", option_values[:service]
+        "-s", option_values[:service],
+        "-C", option_values[:type],
+        "-G", option_values[:value],
       ]
     }
 

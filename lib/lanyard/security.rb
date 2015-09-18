@@ -4,6 +4,17 @@ require 'open3'
 module Lanyard
   class Security
 
+    OPTIONS = {
+      account:  "-a",
+      creator:  "-c",
+      type:     "-C",
+      kind:     "-D",
+      value:    "-G",
+      comment:  "-j",
+      label:    "-l",
+      service:  "-s"
+    }
+
     attr_accessor :keychains
 
     def keychains
@@ -61,16 +72,10 @@ module Lanyard
     private
 
     def build_filter_options **filter_options
-      filter = ["-g"]
-      filter += ["-a", filter_options[:account]]  if filter_options.has_key? :account
-      filter += ["-c", filter_options[:creator]]  if filter_options.has_key? :creator
-      filter += ["-C", filter_options[:type]]     if filter_options.has_key? :type
-      filter += ["-D", filter_options[:kind]]     if filter_options.has_key? :kind
-      filter += ["-G", filter_options[:value]]    if filter_options.has_key? :value
-      filter += ["-j", filter_options[:comment]]  if filter_options.has_key? :comment
-      filter += ["-l", filter_options[:label]]    if filter_options.has_key? :label
-      filter += ["-s", filter_options[:service]]  if filter_options.has_key? :service
-      filter
+      filter_options.sort_by { |k, v| k }.reduce(["-g"]){|memo, obj|
+        memo = memo << Security::OPTIONS[obj[0]] << obj[1] if Security::OPTIONS.has_key? obj[0]
+        memo
+      }
     end
   end
 end
