@@ -39,7 +39,6 @@ module Lanyard
       keychain = [keychain] unless keychain.respond_to?('each')
 
       lock_keychain keychain, **options
-      puts "?"
       security.keychains -= keychain
     end
 

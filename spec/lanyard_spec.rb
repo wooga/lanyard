@@ -93,4 +93,35 @@ describe Lanyard::Lanyard do
     end
 
   end
+
+  describe 'module functions' do
+    let(:subject){ Lanyard }
+
+    let(:lanyard_instance) {
+      inst = double(Lanyard::Lanyard)
+      allow(Lanyard::Lanyard).to receive(:new).and_return inst
+      inst
+    }
+
+    context "use_keychain" do
+      it "invokes method in class instance" do
+        expect(lanyard_instance).to receive(:use_keychain).with(test_keychain, test_keychain_password, test:true)
+        subject.use_keychain test_keychain, test_keychain_password, test:true
+      end
+    end
+
+    context "lock_keychain" do
+      it "invokes method in class instance" do
+        expect(lanyard_instance).to receive(:lock_keychain).with(test_keychain, test:true)
+        subject.lock_keychain test_keychain, test:true
+      end
+    end
+
+    context "unuse_keychain" do
+      it "invokes method in class instance" do
+        expect(lanyard_instance).to receive(:unuse_keychain).with(test_keychain, test:true)
+        subject.unuse_keychain test_keychain, test:true
+      end
+    end
+  end
 end
