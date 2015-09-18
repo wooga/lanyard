@@ -42,19 +42,25 @@ module Rake
       self
     end
 
-    def define
+    private
+
+    def define_unlock
       desc "unlock the build keychain"
       task :unlock => [self.keychain_path] do
         Lanyard::use_keychain self.keychain_path, self.keychain_password
         task('keychain:reset').reenable
       end
+    end
 
+    def define_reset
       desc "reset and lock the build keychain"
       task :reset => [self.keychain_path] do
         Lanyard::unuse_keychain self.keychain_path
         task('keychain:unlock').reenable
       end
+    end
 
+    def define_copy_task
       unless self.original_keychain_path.nil?
         CLEAN.include(self.keychain_path)
         desc "copies keychain from #{File.basename self.original_keychain_path}"
@@ -62,6 +68,12 @@ module Rake
           cp self.original_keychain_path, t.name
         end
       end
+    end
+
+    def define
+      define_unlock
+      define_reset
+      define_copy_task
     end
   end
 end
