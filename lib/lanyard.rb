@@ -20,18 +20,8 @@ module Lanyard
 
       security.keychains += keychain
 
-      keychain.zip(password) do |product|
-        keychain = product[0]
-        password = product[1]
-
-        if options.fetch(:unlock, true)
-          security.unlock_keychain(keychain, password)
-          security.set_keychain_settings( keychain:keychain,
-          lock_sleep:true,
-          lock_after_timeout:true,
-          lock_timeout: options.fetch(:lock_timeout, 7200))
-          security.print_keychain_info keychain
-        end
+      if options.fetch(:unlock, true)
+        unlock_keychain keychain, password, **options
       end
     end
 
@@ -48,6 +38,22 @@ module Lanyard
       keychain.each {|k|
         security.lock_keychain k
       }
+    end
+
+    private
+
+    def unlock_keychain keychain, password, **options
+      keychain.zip(password) do |product|
+        keychain = product[0]
+        password = product[1]
+
+        security.unlock_keychain(keychain, password)
+        security.set_keychain_settings( keychain:keychain,
+        lock_sleep:true,
+        lock_after_timeout:true,
+        lock_timeout: options.fetch(:lock_timeout, 7200))
+        security.print_keychain_info keychain
+      end
     end
   end
 
