@@ -13,6 +13,37 @@ describe Lanyard::Lanyard do
     allow(security).to receive(:keychains).and_return(list_keychain_result)
   end
 
+  describe 'new' do
+
+    context "when passing security" do
+      it "uses security instance" do
+        expect(Lanyard::Security).not_to receive(:new)
+        subject = Lanyard::Lanyard.new security
+        expect(subject.security).to eql security
+      end
+
+      it "has security instance" do
+        subject = Lanyard::Lanyard.new
+        expect(subject.security).not_to be_nil
+      end
+    end
+
+    context "when not passing security" do
+
+      it "creates security instance" do
+        expect(Lanyard::Security).to receive(:new)
+        Lanyard::Lanyard.new nil
+      end
+
+      it "has security instance" do
+        subject = Lanyard::Lanyard.new
+        expect(subject.security).not_to be_nil
+      end
+    end
+
+
+  end
+
   describe 'use_keychain' do
     it "validates keychain and password count are equal" do
       expect{subject.use_keychain [:keychain1,:keychain2], [:password]}.to raise_error(SystemExit)
