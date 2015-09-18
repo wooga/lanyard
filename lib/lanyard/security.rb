@@ -43,5 +43,34 @@ module Lanyard
     def print_keychain_info keychain
       system "security", "show-keychain-info", keychain
     end
+
+    def find_generic_password *keychain, **filter_options
+      filter = build_filter_options(**filter_options)
+
+      password = nil
+      Open3::popen3("security", "find-generic-password", *filter + keychain) do | stdin, stdout, stderr, wait_thr |
+        stdout.each_line { |line|
+          if line.start_with? "password: "
+            password = line.sub(/password: "(.*)"/, '\1')
+          end
+        }
+      end
+      password
+    end
+
+    private
+
+    def build_filter_options **filter_options
+      filter = ["-g"]
+      filter += ["-a", filter_options[:account]]  if filter_options.has_key? :account
+      filter += ["-c", filter_options[:creator]]  if filter_options.has_key? :creator
+      filter += ["-C", filter_options[:type]]     if filter_options.has_key? :type
+      filter += ["-D", filter_options[:kind]]     if filter_options.has_key? :kind
+      filter += ["-G", filter_options[:value]]    if filter_options.has_key? :value
+      filter += ["-j", filter_options[:comment]]  if filter_options.has_key? :comment
+      filter += ["-l", filter_options[:label]]    if filter_options.has_key? :label
+      filter += ["-s", filter_options[:service]]  if filter_options.has_key? :service
+      filter
+    end
   end
 end

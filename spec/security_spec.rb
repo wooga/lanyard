@@ -111,4 +111,87 @@ describe Lanyard::Security do
     end
   end
 
+  describe 'find_generic_password' do
+    it "calls find-generic-password" do
+      expect(Open3).to receive(:popen3).with("security", "find-generic-password", any_args).and_return true
+      subject.find_generic_password
+    end
+
+    it "calls with -g filter to show password" do
+      expect(Open3).to receive(:popen3).with("security", "find-generic-password", "-g", any_args).and_return true
+      subject.find_generic_password
+    end
+
+    it "calls with proviced keychains" do
+      expect(Open3).to receive(:popen3).with("security", "find-generic-password", "-g", test_keychain, test_keychain).and_return true
+      subject.find_generic_password test_keychain, test_keychain
+    end
+
+    let(:option_values){
+      {
+        account: "testAccount",
+        creator: "MAEN",
+        type: "TEST",
+        kind: "test password",
+        value: "test value",
+        label: "test label",
+        comment: "short comment",
+        service: "testService",
+      }
+    }
+
+    let(:expected_options){
+      [
+        "-a", option_values[:account],
+        "-c", option_values[:creator],
+        "-C", option_values[:type],
+        "-D", option_values[:kind],
+        "-G", option_values[:value],
+        "-j", option_values[:comment],
+        "-l", option_values[:label],
+        "-s", option_values[:service]
+      ]
+    }
+
+    let(:expected_password){"iZAeN7vRzQtR3UCTNwxVXrZpNLyWRhgmtrhgYLKuUoREBiWBWi"}
+
+    let(:find_generic_password_result){
+%Q(keychain: "/Users/larusso/Library/Keychains/login.keychain"
+class: "genp"
+attributes:
+    0x00000007 <blob>="TEST"
+    0x00000008 <blob>=<NULL>
+    "acct"<blob>="TEST"
+    "cdat"<timedate>=0x32303134313131373038323233385A00  "20141117082238Z\000"
+    "crtr"<uint32>=<NULL>
+    "cusi"<sint32>=<NULL>
+    "desc"<blob>="Encrypted Volume Password"
+    "gena"<blob>=<NULL>
+    "icmt"<blob>=<NULL>
+    "invi"<sint32>=<NULL>
+    "mdat"<timedate>=0x32303134313131373038323233385A00  "20141117082238Z\000"
+    "nega"<sint32>=<NULL>
+    "prot"<blob>=<NULL>
+    "scrp"<sint32>=<NULL>
+    "svce"<blob>="6FFC3DA2-7447-4419-B73E-ADC9B8CC3D6F"
+    "type"<uint32>=<NULL>
+password: "#{expected_password}")
+    }
+
+    it "returns password" do
+      allow(Open3).to receive(:popen3).with("security", "find-generic-password", "-g","-a", "TEST").and_yield("stdin", find_generic_password_result, "stderr", nil)
+      expect(subject.find_generic_password(account:"TEST")).to eql expected_password
+    end
+
+    it "calls with provided filter options" do
+      expect(Open3).to receive(:popen3).with("security", "find-generic-password", "-g", *expected_options)
+      subject.find_generic_password(**option_values)
+    end
+
+    it "calls with provided filter options and keychains" do
+      expect(Open3).to receive(:popen3).with("security", "find-generic-password", "-g", *expected_options, test_keychain, test_keychain)
+      subject.find_generic_password(test_keychain, test_keychain, **option_values)
+    end
+  end
+
 end
