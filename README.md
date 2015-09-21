@@ -36,10 +36,25 @@ Usage:
 ```
 
 ### Rake
-```
+```ruby
 lanyard = Rake::Lanyard.new
 
 # this will add the tasks :unlock and :reset
+```
+
+```ruby
+lanyard = Rake::Lanyard.new { |t|
+	t.namespace_name = :keychain
+	t.keychain_path = "path/to/keychain-copy.keychain"
+	t.keychain_password = "keychain password"
+	t.copy_keychain_from "path/to/keychain.keychain"
+}
+
+# this will add the tasks :unlock and :reset in the namespace :keychain
+# With the `copy_keychain_from` method you can configure that your build works with 
+# a copy of a keychain instead the original file.
+# This option will add a filetask along with the other tasks to make sure that the 
+# keychain is available and up to date.
 ```
 
 ## Development
