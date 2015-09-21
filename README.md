@@ -40,6 +40,8 @@ Usage:
 lanyard = Rake::Lanyard.new
 
 # this will add the tasks :unlock and :reset
+# By default the task will try to use a keychain called
+# build.keychain located in the rake root.
 ```
 
 ```ruby
