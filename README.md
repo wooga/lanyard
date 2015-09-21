@@ -37,7 +37,9 @@ Usage:
 
 ### Rake
 ```ruby
-lanyard = Rake::Lanyard.new
+require 'rake/lanyard_task'
+
+lanyard = Rake::LanyardTask.new
 
 # this will add the tasks :unlock and :reset
 # By default the task will try to use a keychain called
@@ -45,7 +47,9 @@ lanyard = Rake::Lanyard.new
 ```
 
 ```ruby
-lanyard = Rake::Lanyard.new { |t|
+require 'rake/lanyard_task'
+
+lanyard = Rake::LanyardTask.new { |t|
 	t.namespace_name = :keychain
 	t.keychain_path = "path/to/keychain-copy.keychain"
 	t.keychain_password = "keychain password"
